@@ -53,10 +53,6 @@ const Home = () => {
     activate();
   }, [data])
 
-  useEffect(()=>{
-      
-  }, [display])
-
   const active = (e: MouseEvent)=>{
     const link = e.target as HTMLAnchorElement;
     const links = Array.from(document.getElementsByClassName('links2'));
@@ -77,9 +73,9 @@ const Home = () => {
       <h2>POPULAR PRODUCTS</h2>
       <header>
         <ul>
-          <li className="links2 active2" onClick={active}>Clothing</li>
+          <li className="links2 active2" onClick={active}>All</li>
           <li className="links2" onClick={active}>Electronics</li>
-          <li className="links2" onClick={active}>Others</li>
+          <li className="links2" onClick={active}>Clothing</li>
         </ul>
       </header>
       <div className="popular-products">
