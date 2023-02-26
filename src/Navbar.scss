@@ -1,0 +1,80 @@
+@import './Variables.scss';
+
+body{
+    background: $secondary;
+}
+
+nav {
+    position: fixed;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.842);
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    top: 0;
+    ul{
+        list-style: none;
+        li{
+            display: inline;
+            margin-right: 20px;
+            a{
+              text-decoration: none;
+              color: $tertiary;
+              &:hover{
+                color: $primary;
+              }
+            }
+        }
+    }
+
+    .right{
+        position: relative;
+        float: right;
+        bottom: 50px;
+        right: 30px;
+        input{
+            outline: none;
+            border: none;
+            border-bottom: 1px $tertiary solid;
+            padding-bottom: 5px;
+            background: transparent;
+        }
+        .profile-icon{
+            position: relative;
+            top: 10px;
+            height: 30px;
+            width: 30px;
+            color: $primary;
+            cursor: pointer;
+            margin-left: 50px;
+        }
+        .shopping-cart{
+            position: relative;
+            top: 10px;
+            height: 30px;
+            width: 30px;
+            color: $primary;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+        .searchIcon{
+            color: $tertiary;
+            cursor: pointer;
+            position: relative;
+            top: 5px;
+            right: 15px;
+            &:hover{
+                color: black;
+            }
+        }
+    }
+    .header{
+        position: relative;
+        top: 20px;
+    }
+}
+
+.active{
+    color: $primary;
+    font-weight: 600;
+}
