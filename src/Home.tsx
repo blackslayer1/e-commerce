@@ -27,7 +27,7 @@ const Home = () => {
   const activate = () => {
     let p = [];
     for(var i=0; i<data.length; i++){
-      p.push({id: data[i].id, title: data[i].title, price: data[i].price, description: data[i].description, category: data[i].category, imageUrl: data[i].image, rating: {rate: data[i].rate, total: data[i].count}});
+      p.push({id: data[i].id, title: data[i].title, price: data[i].price, description: data[i].description, category: data[i].category, imageUrl: data[i].image, rating: {rate: Math.round(data[i].rating.rate), total: data[i].rating.count}});
     }
     setProducts(p);
   }
@@ -62,13 +62,19 @@ const Home = () => {
     link.classList.add("active2");
 }
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      document.getElementById('activate')!.click()
+    }, 1000)
+  }, [])
+
   return (
     <div className="home">
       <Navbar />
       <div className="display-container">
-      <Display />
-      <Display />
-      <Display />
+      <Display text={"30% OFF"} img={1} />
+      <Display text={"Black Friday Deals"} img={2} />
+      <Display text={"Only $49.99"} img={3} />
       </div>
       <h2>POPULAR PRODUCTS</h2>
       <header>
@@ -83,7 +89,7 @@ const Home = () => {
           return <Product  id={obj.id} title={obj.title} price={obj.price} description={obj.description} category={obj.category} imageUrl={obj.imageUrl} rating={obj.rating} />
         })}
       </div>
-      <button id="activate" onClick={activateDisplay}>activate</button>
+      <button style={{position: "absolute", top: "0", left: "0", visibility: "hidden"}} id="activate" onClick={activateDisplay}>activate</button>
       </div>
   )
 }

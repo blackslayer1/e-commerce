@@ -1,7 +1,9 @@
 import './Product.scss';
+import { useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { useEffect } from 'react';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 
 interface ProductIT{
   id: number,
@@ -20,6 +22,11 @@ function toTitleCase(str: string) {
 }
 
 const Product = ({ id, title, price, description, category, imageUrl, rating }: ProductIT) => {
+  
+useEffect(()=>{
+  console.log(rating)
+}, []);
+
   return (
     <div id="product" className="product">
       <img src={imageUrl} alt={title} className="product-image" />
@@ -27,11 +34,11 @@ const Product = ({ id, title, price, description, category, imageUrl, rating }: 
         <div className="info-content">
         <h5 className="title">{title}</h5>
       <ul className="ratings">
-        <li><StarBorderIcon /></li>
-        <li><StarBorderIcon /></li>
-        <li><StarBorderIcon /></li>
-        <li><StarBorderIcon /></li>
-        <li><StarBorderIcon /></li>
+        <li>{rating.rate >= 1 ? <StarIcon /> : <StarBorderIcon />}</li>
+        <li>{rating.rate >= 2 ? <StarIcon /> : <StarBorderIcon />}</li>
+        <li>{rating.rate >= 3 ? <StarIcon /> : <StarBorderIcon />}</li>
+        <li>{rating.rate >= 4 ? <StarIcon /> : <StarBorderIcon />}</li>
+        <li>{rating.rate === 5 ? <StarIcon /> : <StarBorderIcon />}</li>
       </ul>
       <h3 className="price">{"$" + price}</h3>
       <span className="category">{toTitleCase(category)}</span>

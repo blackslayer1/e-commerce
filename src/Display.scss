@@ -1,9 +1,36 @@
+@import './Variables.scss';
+
 .display{
     margin-top: 40px;
     margin-left: 20px;
     height: 35vh;
-    background: blue;
     border-radius: 10px;
     margin-right: 2px;
     flex: 0 0 50%;
+    cursor: pointer;
+    transition: 0.3s all;
+    h1{
+        display:inline;
+        color: $secondary;
+        padding: 10px;
+        position: relative;
+        bottom: 220px;
+        background: rgb(252, 82, 52);
+        border-radius: 10px;
+        height: 50px;
+        font-family: monospace;
+        font-size: 40px;
+        font-weight: bolder;
+        float: right;
+        right: 30px;
+    }
+    img{
+        height: 100%;
+        width: 100%;
+        position: relative;
+        border-radius: 10px;
+    }
+    &:hover{
+    transform: translateY(-5px);
+    }
 }
