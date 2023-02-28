@@ -38,6 +38,14 @@ nav {
             border-bottom: 1px $tertiary solid;
             padding-bottom: 5px;
             background: transparent;
+            &:focus{
+                border-bottom: 2px black solid;
+                &::placeholder{
+                    font-size: 10px;
+                    position: relative;
+                    bottom: 6px;
+                }
+            }
         }
         .profile-icon{
             position: relative;

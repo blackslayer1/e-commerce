@@ -2,8 +2,6 @@ import './Product.scss';
 import { useEffect } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 
 interface ProductIT{
   id: number,
@@ -28,7 +26,7 @@ useEffect(()=>{
 }, []);
 
   return (
-    <div id="product" className="product">
+    <div id="product" className="product" onClick={()=>{document.getElementById('modal' + id)!.style.display="block"}}>
       <img src={imageUrl} alt={title} className="product-image" />
       <div className="info">
         <div className="info-content">
