@@ -75,6 +75,17 @@ nav {
                 color: black;
             }
         }
+        .numberOfItems{
+            background: red;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            right: -5px;
+            bottom: 25px;
+        }
     }
     .header{
         position: relative;

@@ -4,7 +4,7 @@ import './ProductPage.scss';
 const ProductPage = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar numberOfItems={0} />
     </div>
   )
 }

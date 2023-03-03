@@ -2,13 +2,25 @@ import './Navbar.scss';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
-import { useEffect, MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({numberOfItems}: {numberOfItems: number}) => {
+
     useEffect(()=>{
       let path = window.location.pathname.replace(/\\|\//g,'');
       document.getElementById(path + "link")!.classList.add('active');
     }, [])
+
+    useEffect(()=>{
+      const number = document.getElementById('numberOfItems')!;
+      if(numberOfItems === 0){
+        number.style.display="none";
+      } else {
+        if(number.style.display === "none"){
+          number.style.display="block";
+        }
+      }
+    }, [numberOfItems])
     
   return (
     <nav>
@@ -22,6 +34,9 @@ const Navbar = () => {
     <input placeholder='Search products' />
     <SearchIcon className="searchIcon" />
     <AccountCircleIcon className="profile-icon" />
+    <div id="numberOfItems" className="numberOfItems">
+    {numberOfItems}
+    </div>
     <ShoppingCartIcon className="shopping-cart" />
     </div>
     </div>

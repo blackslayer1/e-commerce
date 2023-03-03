@@ -11,6 +11,8 @@ const Home = () => {
   const [data, setData] = useState<any>([]);
   const [products, setProducts] = useState<ProductIT[]>([]);
   const [display, setDisplay] = useState<ProductIT[]>([]);
+  const [cart, setCart] = useState<ProductIT[]>([]);
+  const [numberOfItems, setNumberOfItems] = useState<number>(0);
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -64,6 +66,26 @@ const Home = () => {
     link.classList.add("active2");
 }
 
+  const addToCart = (id: number, item: ProductIT) => {
+    const text = document.getElementById('addedToBasket' + id)! as HTMLHeadingElement;
+    const button = document.getElementById('addToCart' + id)! as HTMLButtonElement;
+    if(button.innerHTML=== "Add To Cart"){
+      button.style.background="#f54343";
+      button.innerHTML="Remove Item";
+      text.style.display="inline";
+      setCart([...cart, item]);
+      setNumberOfItems(numberOfItems+1);
+    } else {
+      button.style.background="#00a851";
+      button.innerHTML="Add To Cart";
+      text.style.display="none";
+      setCart(cart.filter((item)=>{
+        return item.id !== id
+      }))
+      setNumberOfItems(numberOfItems-1);
+    }
+  }
+
  /* useEffect(()=>{
     setTimeout(()=>{
       document.getElementById('activate')!.click()
@@ -72,7 +94,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <Navbar />
+      <Navbar numberOfItems={numberOfItems} />
       <div className="display-container">
       <Display text={"30% OFF"} img={1} />
       <Display text={"Black Friday Deals"} img={2} />
@@ -92,14 +114,15 @@ const Home = () => {
           <Product  id={obj.id} title={obj.title} price={obj.price} description={obj.description} category={obj.category} imageUrl={obj.imageUrl} rating={obj.rating} />
           <div id={"modal" + obj.id} className="modal">
           <div className="modal-content">
+            <h3 className="addedToBasket" id={'addedToBasket'+obj.id}>Item has been added to basket</h3>
           <span onClick={()=>{document.getElementById('modal' + obj.id)!.style.display="none"}} className="close">&times;</span>
           <div style={{display: "flex"}}>
           <div style={{height: "300px", width: "40%"}}>
           <h4>{obj.title}</h4>
           <img style={{height: "80%", width: "80%"}} src={obj.imageUrl} alt={obj.title} />
           </div>
-          <div style={{height: "300px", width: "55%"}}>
-          <p style={{fontWeight: "400"}}>{obj.description}</p>
+          <div style={{width: "55%"}}>
+          <p className="description" style={{fontWeight: "400"}}>{obj.description}</p>
             <div style={{position: "relative", float: "left"}}>
               <h4>Price: <span>${obj.price}</span></h4>
               <h4>Category: <span>{obj.category}</span></h4>
@@ -111,7 +134,7 @@ const Home = () => {
             <li>{obj.rating.rate === 5 ? <StarIcon /> : <StarBorderIcon />}</li>
             </ul>
             <div className="buttons">
-            <button className="addToCart">Add To Cart</button>
+            <button onClick={()=>{addToCart(obj.id, obj)}} id={"addToCart" + obj.id} className="addToCart">Add To Cart</button>
             <button className="buy">Checkout Now</button>
             </div>
             </div>
