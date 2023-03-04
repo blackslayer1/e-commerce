@@ -1,11 +1,12 @@
 import './Home.scss';
 import Display from './Display';
-import { useState, useEffect ,MouseEvent } from 'react';
+import { useState, useEffect ,MouseEvent, ChangeEvent } from 'react';
 import Navbar from './Navbar';
 import Product from './Product';
 import ProductIT from './Interface';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 
 const Home = () => {
   const [data, setData] = useState<any>([]);
@@ -13,6 +14,8 @@ const Home = () => {
   const [display, setDisplay] = useState<ProductIT[]>([]);
   const [cart, setCart] = useState<ProductIT[]>([]);
   const [numberOfItems, setNumberOfItems] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
+  const [tax, setTax] = useState<number>(0);
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -75,6 +78,7 @@ const Home = () => {
       text.style.display="inline";
       setCart([...cart, item]);
       setNumberOfItems(numberOfItems+1);
+      setTotal(total+parseFloat(item.price));
     } else {
       button.style.background="#00a851";
       button.innerHTML="Add To Cart";
@@ -83,7 +87,18 @@ const Home = () => {
         return item.id !== id
       }))
       setNumberOfItems(numberOfItems-1);
+      setTotal(total-parseFloat(item.price));
     }
+  }
+
+  useEffect(()=>{
+    setTax(total/10);
+  }, [cart])
+
+  const changeHandler = (price: number, id: number) => {
+      const select = document.getElementById("select" + id)! as HTMLSelectElement;
+      const number = price * parseFloat(select.value);
+      
   }
 
  /* useEffect(()=>{
@@ -147,6 +162,59 @@ const Home = () => {
         })}
       </div>
       <button style={{position: "absolute", top: "0", left: "0", visibility: "visible"}} id="activate" onClick={activateDisplay}>activate</button>
+      <div id="cartModal" className="modal">
+      <div className="modal-content">
+        <span onClick={()=>{document.getElementById('cartModal')!.style.display="none"}} className="close">&times;</span>
+        <h3>My Cart <LocalMallIcon /></h3>
+        <hr />
+        <div className="order-summary" style={{width: "30%", height: "87%", float: "right", marginTop: '20px', background: 'white'}}>
+        <h3 style={{float: 'left', marginLeft: "10px"}}>ORDER SUMMARY:</h3>
+        <div>
+          <h4 className="products-number">{numberOfItems} {numberOfItems > 1 ? "PRODUCTS" : "PRODUCT"}</h4>
+          <hr />
+          <h4>Delivery</h4>
+          <span>FREE</span>
+          <hr />
+          <h4>Tax ${tax.toFixed(2)}</h4>
+          <hr />
+          <h4 className="total">Total ${total.toFixed(2)}</h4>
+          <span></span>
+        </div>
+        </div>
+        <div style={{overflow: "auto", height: "95%", width: "70%"}}>
+        {cart.map((obj)=>{
+          return <>
+          <div className="cart-item">
+            <img src={obj.imageUrl} alt={obj.title} />
+            <div className="left">
+              <h4>{obj.title}</h4>
+              <span>Price: ${obj.price}</span>
+              <br />
+              <span>Category: {obj.category}</span>
+              <br /><br />
+              <button className="delete">Delete</button>
+            </div>
+            <div className="right">
+              <select id={"select" + obj.id} onChange={()=>{changeHandler(parseFloat(obj.price), obj.id)}}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+              <h3>${obj.price}</h3>
+            </div>
+          </div>
+          </>
+        })}
+        </div>
+      </div>
+    </div>
       </div>
   )
 }

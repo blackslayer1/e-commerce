@@ -2,7 +2,7 @@ import './Navbar.scss';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const Navbar = ({numberOfItems}: {numberOfItems: number}) => {
 
@@ -37,7 +37,7 @@ const Navbar = ({numberOfItems}: {numberOfItems: number}) => {
     <div id="numberOfItems" className="numberOfItems">
     {numberOfItems}
     </div>
-    <ShoppingCartIcon className="shopping-cart" />
+    <ShoppingCartIcon onClick={()=>{document.getElementById('cartModal')!.style.display="block"}} className="shopping-cart" />
     </div>
     </div>
     </nav>
