@@ -16,6 +16,7 @@ const Home = () => {
   const [numberOfItems, setNumberOfItems] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
+  const [counter, setCounter] = useState<number>(0);
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -97,9 +98,40 @@ const Home = () => {
 
   const changeHandler = (price: number, id: number) => {
       const select = document.getElementById("select" + id)! as HTMLSelectElement;
-      const number = price * parseFloat(select.value);
-      
+      var newPrice = price * (parseFloat(select.value)-1);
+      setTotal((total-counter)+newPrice);
+      setCounter(newPrice);
   }
+
+  useEffect(() => {
+    const container = document.getElementById('display-container')!;
+    var scrollCounter = 0;
+    var scrollRight = true;
+    const intervalID = setInterval(() =>  {
+      if(scrollRight){
+        container.scrollBy({
+          left: 400,
+          behavior: "smooth"
+        });
+        scrollCounter += 1;
+        if(scrollCounter % 3 === 0){
+          scrollRight = false;
+        }
+        } else {
+          container.scrollBy({
+            left: -400,
+            behavior: "smooth"
+          });
+          scrollCounter += 1;
+          if(scrollCounter % 3 === 0){
+            scrollRight = true;
+          }
+        }
+
+    }, 3000);
+
+    return () => clearInterval(intervalID);
+}, []);
 
  /* useEffect(()=>{
     setTimeout(()=>{
@@ -110,7 +142,7 @@ const Home = () => {
   return (
     <div className="home">
       <Navbar numberOfItems={numberOfItems} />
-      <div className="display-container">
+      <div id="display-container" className="display-container" style={{transition: "0.3s all"}}>
       <Display text={"30% OFF"} img={1} />
       <Display text={"Black Friday Deals"} img={2} />
       <Display text={"Only $49.99"} img={3} />
