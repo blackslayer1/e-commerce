@@ -7,6 +7,9 @@ import ProductIT from './Interface';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import LockIcon from '@mui/icons-material/Lock';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import CheckIcon from '@mui/icons-material/Check';
 
 const Home = () => {
   const [data, setData] = useState<any>([]);
@@ -17,6 +20,8 @@ const Home = () => {
   const [total, setTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [counter, setCounter] = useState<number>(0);
+  const [paymentOption, setPaymentOption] = useState<string>('');
+  const [checkMarkChangeHandler, setCheckMarkChangeHandler] = useState<number>(0);
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -103,7 +108,96 @@ const Home = () => {
       setCounter(newPrice);
   }
 
-  useEffect(() => {
+  const checkBox = (number: number, check: boolean) => {
+    if(check){
+      document.getElementById('checkmark' + number)!.style.background="#00a851";
+      document.getElementById('checkIcon' + number)!.style.visibility="visible";
+      setCheckMarkChangeHandler(checkMarkChangeHandler+1);
+    } else {
+      document.getElementById('checkmark' + number)!.style.background="gray";
+      document.getElementById('checkIcon' + number)!.style.visibility="hidden";
+      setCheckMarkChangeHandler(checkMarkChangeHandler-1);
+    }
+  }
+
+  const enableButton = (enable: boolean) => {
+    const button = document.getElementById('placeOrder')! as HTMLButtonElement;
+    if(enable){
+      button.style.pointerEvents = 'all';
+      button.style.opacity = "100%";
+    } else {
+      button.style.pointerEvents = 'none';
+      button.style.opacity = "50%";
+    }
+  }
+
+  useEffect(()=>{
+    const paypalInfo = document.getElementById('paypalInfo')!;
+    const cardInfo = document.getElementById('cardInfo')!;
+
+    switch(paymentOption){
+      case 'paypal':
+      paypalInfo.style.visibility="visible";
+      cardInfo.style.visibility="hidden";
+      checkBox(3, false);
+      break;
+      case 'cash':
+        paypalInfo.style.visibility="hidden";
+        cardInfo.style.visibility="hidden";
+        checkBox(3, true);
+      break;
+      case 'creditCard':
+      cardInfo.style.visibility="visible";
+      paypalInfo.style.visibility="hidden";
+      checkBox(3, false);
+      break;
+    }
+  }, [paymentOption])
+
+  const inputChangeHandler = () => {
+    const container = document.getElementsByClassName('billingAddress')[0] as HTMLDivElement;
+    const inputElements = Array.from(container.querySelectorAll("input"));
+    var shouldRun = true;
+    inputElements.map((input)=>{
+      if(input.value === ''){
+        shouldRun = false;
+      }
+    })
+    if(shouldRun){
+      checkBox(1, true);
+    } else {
+      checkBox(1, false);
+    }
+  }
+
+    useEffect(()=>{
+      const checkmarks = Array.from(document.getElementsByClassName('checkmark'));
+      var shouldRun = true;
+      checkmarks.map((checkmark)=>{
+        if((checkmark as HTMLDivElement).style.background === 'gray'){
+          shouldRun = false;
+        }
+      })
+      if(shouldRun){
+        enableButton(true);
+      } else {
+        enableButton(false);
+      }
+    }, [checkMarkChangeHandler])
+
+    const placeOrder = () => {
+      const lockIcon = (document.getElementsByClassName('lockIcon')[0] as HTMLDivElement)
+      const spinner = document.getElementById('spinner')!;
+      lockIcon.style.visibility="hidden";
+      spinner.style.display="block";
+      setTimeout(()=>{
+        document.getElementById('orderPlacedModal')!.style.display="block";
+        lockIcon.style.visibility="visible";
+        spinner.style.display="none";
+      }, 2000)
+    }
+
+ /* useEffect(() => {
     const container = document.getElementById('display-container')!;
     var scrollCounter = 0;
     var scrollRight = true;
@@ -131,7 +225,7 @@ const Home = () => {
     }, 3000);
 
     return () => clearInterval(intervalID);
-}, []);
+}, []); */
 
  /* useEffect(()=>{
     setTimeout(()=>{
@@ -143,9 +237,9 @@ const Home = () => {
     <div className="home">
       <Navbar numberOfItems={numberOfItems} />
       <div id="display-container" className="display-container" style={{transition: "0.3s all"}}>
-      <Display text={"30% OFF"} img={1} />
-      <Display text={"Black Friday Deals"} img={2} />
-      <Display text={"Only $49.99"} img={3} />
+      <Display text={"30% OFF"} img={1} background={'rgba(0, 0, 0, 0.651)'} />
+      <Display text={"Black Friday Deals"} img={2} background={'rgba(0, 0, 0, 0.651)'} />
+      <Display text={"Only $49.99"} img={3} background={'rgb(252, 82, 52)'} />
       </div>
       <h2>POPULAR PRODUCTS</h2>
       <header>
@@ -212,6 +306,7 @@ const Home = () => {
           <h4 className="total">Total ${total.toFixed(2)}</h4>
           <span></span>
         </div>
+        <button className='checkout-button' onClick={()=>{document.getElementById('buyModal')!.style.display="block"}}><span>Checkout</span><ArrowRightAltIcon className="arrow-icon" /></button>
         </div>
         <div style={{overflow: "auto", height: "95%", width: "70%"}}>
         {cart.map((obj)=>{
@@ -247,6 +342,119 @@ const Home = () => {
         </div>
       </div>
     </div>
+    <div id="buyModal" className="modal">
+  <div className="modal-content">
+    <span className="close" onClick={()=>{
+      document.getElementById('buyModal')!.style.display="none";
+      document.getElementById('cartModal')!.style.display="none";
+      }}>&times;</span>
+      <header>
+        <div style={{position: "relative", right: "330px", height: "50px"}}>
+        <h3 style={{position: "relative", right: "157px", bottom: "20px"}}>Checkout</h3>
+   <p style={{position: "relative", bottom: '35px'}}>Please enter your details below to complete your purchase.</p>
+        </div>
+      </header>
+      <div className="details">
+      <div className="billingAddress">
+      <div style={{display: "flex"}}>
+      <h3>BILLING ADDRESS</h3>
+      <div className="checkmark" id="checkmark1" >
+        <CheckIcon className="checkIcon" id="checkIcon1" />
+      </div>
+      </div>
+      <input placeholder="First Name" onChange={inputChangeHandler} />
+      <input placeholder="Last Name" onChange={inputChangeHandler} />
+      <input type="email" placeholder="Email Address" onChange={inputChangeHandler} />
+      <input type="number" placeholder="Telephone"  onChange={inputChangeHandler}/>
+      <input placeholder="Address" onChange={inputChangeHandler} />
+      <br />
+      <div style={{position: "relative", marginBottom: "10px", right: "60px"}}>
+      <label style={{marginRight: '5px'}}>Country</label>
+      <select style={{padding: "5px", cursor: "pointer", outline: "none"}}>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+      </select>
+      </div>
+      <input placeholder="State" onChange={inputChangeHandler} />
+      <input placeholder='City' onChange={inputChangeHandler} />
+      <input type="number" placeholder="Zip Code" onChange={inputChangeHandler} />
+      </div>
+      <div className="shippingMethod">
+      <div style={{display: "flex"}}>
+      <h3>SHIPPING METHOD</h3>
+      <div className="checkmark" id="checkmark2" >
+      <CheckIcon className="checkIcon" id="checkIcon2" />
+      </div>
+      </div>
+      <label>Free Shipping <span style={{color: "green", fontWeight: "600"}}>Arriving In 5-7 Business Days</span></label>
+      <div style={{position: "relative", right: "135px", marginTop: "5px"}}>
+      <input name="shipping" value="free" type="radio" onClick={()=>{checkBox(2, true)}} />
+      <label style={{position: "relative", right: "120px", bottom: "1px"}}>Free</label>
+      </div>
+      <label style={{position: "relative", right: "17px"}}>Flat Rate <span style={{color: "green", fontWeight: "600"}}>Arriving In 2-3 Business Days</span></label>
+      <div style={{position: "relative", right: "127px", marginTop: "5px"}}>
+      <input name="shipping" value="flatRate" type="radio" onClick={()=>{checkBox(2, true)}} />
+      <label style={{position: "relative", right: "120px", bottom: "1px"}}>$10.00</label>
+      </div>
+      </div>
+      <div className="paymentMethod">
+      <div style={{display: "flex"}}>
+      <h3>PAYMENT METHOD</h3>
+      <div className="checkmark" id="checkmark3" >
+      <CheckIcon className="checkIcon" id="checkIcon3" />
+      </div>
+      </div>
+      <label>Paypal</label>
+      <input style={{position: "relative", left: "17px"}} type="radio" name="payment" value="paypal" id="paypal" onChange={()=>{setPaymentOption("paypal")}} />
+      <br />
+      <label style={{position: "relative", right: "75px"}}>Invoice with the package</label>
+      <input style={{position: "relative", bottom: "20px", left: "40px"}} type="radio" name="payment" value="cash" id="cash" onChange={()=>{setPaymentOption("cash")}} />
+      <br />
+      <div style={{position: "relative", bottom: "17px"}}>
+      <label style={{position: "relative", left: "17px"}}>Credit Card</label>
+      <input type="radio" name="payment" value="creditCard" id="creditCard" onChange={()=>{setPaymentOption("creditCard")}} />
+      </div>
+       <div id="paypalInfo" style={{visibility: "hidden"}}>
+        <label>Paypal Email</label>
+        <br />
+        <input type="email" placeholder="Email" />
+       </div>
+       <div id="cardInfo" style={{visibility: "hidden"}}>
+        <label>Card Number</label>
+        <br />
+        <input style={{marginTop: "5px"}} type="number" placeholder="Card Number" />
+        <br />
+        <label style={{marginRight: "10px"}}>Expiration Date</label>
+        <input style={{width: "35px", padding: "5px"}} type="number"/>
+        <span style={{marginLeft: "5px", marginRight: '5px'}}>/</span>
+        <input style={{width: "35px", padding: "5px"}} type="number"/>
+        <br />
+        <label style={{marginRight: "10px"}}>Security Code</label>
+        <input style={{width: "20%", padding: "5px"}} type="number" min="0" />
+        <br />
+        <label style={{marginRight: '10px'}}>Name</label>
+        <input style={{padding: "5px", width: "40%"}}/>
+        <br />
+        <label style={{marginRight: '10px'}}>Last Name</label>
+        <input style={{padding: "5px", width: "40%"}}/>
+       </div>
+      </div>
+      <button id="placeOrder" onClick={placeOrder}><span>Place Order</span> <LockIcon className="lockIcon" /></button>
+      </div>
+      <div className="three-quarter-spinner" id="spinner"></div>
+  </div>
+</div>
+<div id="orderPlacedModal" className="modal">
+  <div className="modal-content">
+  <span className="close" onClick={()=>{
+      document.getElementById('buyModal')!.style.display="none";
+      document.getElementById('cartModal')!.style.display="none";
+      document.getElementById('orderPlacedModal')!.style.display="none";
+      }}>&times;</span>
+      <h1>Order Placed!</h1>
+      <h2>Please check your email for confirmation.</h2>
+  </div>
+  </div>
       </div>
   )
 }
