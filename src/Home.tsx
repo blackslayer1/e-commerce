@@ -22,6 +22,8 @@ const Home = () => {
   const [counter, setCounter] = useState<number>(0);
   const [paymentOption, setPaymentOption] = useState<string>('');
   const [checkMarkChangeHandler, setCheckMarkChangeHandler] = useState<number>(0);
+  const [paypalEmail, setPaypalEmail] = useState<string>('');
+  const [cardInput, setCardInput] = useState<string>('');
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -171,6 +173,35 @@ const Home = () => {
   }
 
     useEffect(()=>{
+      if(paymentOption === 'paypal'){
+        if(paypalEmail === ''){
+          enableButton(false);
+        } else {
+          enableButton(true);
+        }
+      }
+    }, [paypalEmail])
+
+    useEffect(()=>{
+      const cardInfo = document.getElementById('cardInfo')! as HTMLDivElement;
+      const inputs = Array.from(cardInfo.querySelectorAll('input'));
+      var shouldRun = true;
+
+      if(paymentOption === 'creditCard'){
+      inputs.map((input)=>{
+        if((input as HTMLInputElement).value === ''){
+          shouldRun = false;
+        }
+      })
+        if(shouldRun){
+          enableButton(true);
+        } else {
+          enableButton(false);
+        }
+      }
+    }, [cardInput])
+
+    useEffect(()=>{
       const checkmarks = Array.from(document.getElementsByClassName('checkmark'));
       var shouldRun = true;
       checkmarks.map((checkmark)=>{
@@ -195,6 +226,30 @@ const Home = () => {
         lockIcon.style.visibility="visible";
         spinner.style.display="none";
       }, 2000)
+    }
+
+    useEffect(()=>{
+      const button = document.getElementsByClassName('checkout-button')[0] as HTMLButtonElement;
+      if(cart.length > 0){
+        button.style.opacity="100%";
+        button.style.pointerEvents="all";
+      } else {
+        button.style.opacity="50%";
+        button.style.pointerEvents="none";
+      }
+    }, [cart])
+
+    const deleteItem = (id: number, price: number) => {
+      const button = document.getElementById('addToCart' + id)! as HTMLButtonElement;
+      const text = document.getElementById('addedToBasket' + id)! as HTMLHeadingElement;
+      button.style.background="#00a851";
+      button.innerHTML="Add To Cart";
+      setCart(cart.filter((item)=>{
+        return item.id !== id
+      }))
+      setNumberOfItems(numberOfItems-1);
+      setTotal(total-price);
+      text.style.display="none";
     }
 
  /* useEffect(() => {
@@ -319,7 +374,7 @@ const Home = () => {
               <br />
               <span>Category: {obj.category}</span>
               <br /><br />
-              <button className="delete">Delete</button>
+              <button className="delete" onClick={()=>{deleteItem(obj.id, parseFloat(obj.price))}}>Delete</button>
             </div>
             <div className="right">
               <select id={"select" + obj.id} onChange={()=>{changeHandler(parseFloat(obj.price), obj.id)}}>
@@ -417,26 +472,26 @@ const Home = () => {
        <div id="paypalInfo" style={{visibility: "hidden"}}>
         <label>Paypal Email</label>
         <br />
-        <input type="email" placeholder="Email" />
+        <input type="email" placeholder="Email" onChange={(e: ChangeEvent<HTMLInputElement>)=>{setPaypalEmail(e.target.value)}} />
        </div>
        <div id="cardInfo" style={{visibility: "hidden"}}>
         <label>Card Number</label>
         <br />
-        <input style={{marginTop: "5px"}} type="number" placeholder="Card Number" />
+        <input style={{marginTop: "5px"}} type="number" placeholder="Card Number"onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}} />
         <br />
         <label style={{marginRight: "10px"}}>Expiration Date</label>
-        <input style={{width: "35px", padding: "5px"}} type="number"/>
+        <input style={{width: "35px", padding: "5px"}} type="number"onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}} />
         <span style={{marginLeft: "5px", marginRight: '5px'}}>/</span>
-        <input style={{width: "35px", padding: "5px"}} type="number"/>
+        <input style={{width: "35px", padding: "5px"}} type="number"onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}} />
         <br />
         <label style={{marginRight: "10px"}}>Security Code</label>
-        <input style={{width: "20%", padding: "5px"}} type="number" min="0" />
+        <input style={{width: "20%", padding: "5px"}} type="number" min="0"onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}} />
         <br />
         <label style={{marginRight: '10px'}}>Name</label>
-        <input style={{padding: "5px", width: "40%"}}/>
+        <input style={{padding: "5px", width: "40%"}}onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}}/>
         <br />
         <label style={{marginRight: '10px'}}>Last Name</label>
-        <input style={{padding: "5px", width: "40%"}}/>
+        <input style={{padding: "5px", width: "40%"}}onChange={(e: ChangeEvent<HTMLInputElement>)=>{setCardInput(e.target.value)}}/>
        </div>
       </div>
       <button id="placeOrder" onClick={placeOrder}><span>Place Order</span> <LockIcon className="lockIcon" /></button>

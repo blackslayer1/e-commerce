@@ -212,6 +212,8 @@
         font-size: 15px;
         cursor: pointer;
         transition: 0.3s all;
+        opacity: 50%;
+        pointer-events: none;
         span{
             font-weight: 600; 
             position: relative;
