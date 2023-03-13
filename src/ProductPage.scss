@@ -1,1 +1,25 @@
 @import './Variables.scss';
+
+.product-page{
+    header{
+        position: relative;
+        top: 20px;
+        left: 500px;
+        ul{
+            list-style: none;
+            .active2{
+                color: $primary;
+            }
+            li{
+                cursor: pointer;
+                display: inline;
+                margin-right: 20px;
+                font-weight: bold;
+                transition: 0.3s all;
+                &:hover{
+                    color: $primary;
+                }
+            }
+        }
+    }
+}

@@ -68,15 +68,6 @@ const Home = () => {
     activate();
   }, [data])
 
-  const active = (e: MouseEvent)=>{
-    const link = e.target as HTMLAnchorElement;
-    const links = Array.from(document.getElementsByClassName('links2'));
-    links.map((elem)=>{
-    elem.classList.remove("active2")
-    })
-    link.classList.add("active2");
-}
-
   const addToCart = (id: number, item: ProductIT) => {
     const text = document.getElementById('addedToBasket' + id)! as HTMLHeadingElement;
     const button = document.getElementById('addToCart' + id)! as HTMLButtonElement;
@@ -216,6 +207,19 @@ const Home = () => {
       }
     }, [checkMarkChangeHandler])
 
+    const reset = () => {
+      cart.map((item)=>{
+        const button = document.getElementById('addToCart' + item.id)! as HTMLButtonElement;
+        const text = document.getElementById('addedToBasket' + item.id)! as HTMLHeadingElement;
+        button.style.background="#00a851";
+        button.innerHTML="Add To Cart";
+        text.style.display="none";
+      })
+      setCart([]);
+      setNumberOfItems(0);
+      setTotal(0);
+    }
+
     const placeOrder = () => {
       const lockIcon = (document.getElementsByClassName('lockIcon')[0] as HTMLDivElement)
       const spinner = document.getElementById('spinner')!;
@@ -225,6 +229,7 @@ const Home = () => {
         document.getElementById('orderPlacedModal')!.style.display="block";
         lockIcon.style.visibility="visible";
         spinner.style.display="none";
+        reset();
       }, 2000)
     }
 
@@ -296,13 +301,8 @@ const Home = () => {
       <Display text={"Black Friday Deals"} img={2} background={'rgba(0, 0, 0, 0.651)'} />
       <Display text={"Only $49.99"} img={3} background={'rgb(252, 82, 52)'} />
       </div>
+      <header style={{borderBottom: "1px solid #a3a3a3"}}>
       <h2>POPULAR PRODUCTS</h2>
-      <header>
-        <ul>
-          <li className="links2 active2" onClick={active}>All</li>
-          <li className="links2" onClick={active}>Electronics</li>
-          <li className="links2" onClick={active}>Clothing</li>
-        </ul>
       </header>
       <div className="popular-products">
         {display.map((obj)=>{

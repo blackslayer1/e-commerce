@@ -11,24 +11,6 @@
         overflow-x: auto;
         flex-direction: row;
     }
-    header{
-        border-bottom: 1px $tertiary solid;
-        ul{
-            list-style: none;
-            .active2{
-                color: purple;
-            }
-            li{
-                cursor: pointer;
-                display: inline;
-                margin-right: 20px;
-                font-weight: bold;
-                &:hover{
-                    color: purple;
-                }
-            }
-        }
-    }
     .popular-products{
         height: 80vh;
         display: flex;
