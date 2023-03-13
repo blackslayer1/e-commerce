@@ -6,7 +6,7 @@ import Product from './Product';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 
-const Search = () => {
+const Search = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}: {cart: ProductIT[], setCart: any, numberOfItems: number, setNumberOfItems: any, total: number, setTotal: any}) => {
   const [ret, setRet] = useState<string>((window.location.pathname).replace('/search/',''));
   const [data, setData] = useState<any>([]);
   const [products, setProducts] = useState<ProductIT[]>([]);
@@ -42,6 +42,28 @@ const Search = () => {
         }
     })
     setResults(arr);
+  }
+
+  const addToCart = (id: number, item: ProductIT) => {
+    const text = document.getElementById('addedToBasket' + id)! as HTMLHeadingElement;
+    const button = document.getElementById('addToCart' + id)! as HTMLButtonElement;
+    if(button.innerHTML=== "Add To Cart"){
+      button.style.background="#f54343";
+      button.innerHTML="Remove Item";
+      text.style.display="inline";
+      setCart([...cart, item]);
+      setNumberOfItems(numberOfItems+1);
+      setTotal(total+parseFloat(item.price));
+    } else {
+      button.style.background="#00a851";
+      button.innerHTML="Add To Cart";
+      text.style.display="none";
+      setCart(cart.filter((item)=>{
+        return item.id !== id
+      }))
+      setNumberOfItems(numberOfItems-1);
+      setTotal(total-parseFloat(item.price));
+    }
   }
 
   useEffect(()=>{
@@ -81,7 +103,7 @@ const Search = () => {
             <li>{obj.rating.rate === 5 ? <StarIcon /> : <StarBorderIcon />}</li>
             </ul>
             <div className="buttons">
-            <button onClick={()=>{}} id={"addToCart" + obj.id} className="addToCart">Add To Cart</button>
+            <button onClick={()=>{addToCart(obj.id, obj)}} id={"addToCart" + obj.id} className="addToCart">Add To Cart</button>
             <button className="buy">Checkout Now</button>
             </div>
             </div>

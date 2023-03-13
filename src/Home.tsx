@@ -11,13 +11,10 @@ import LockIcon from '@mui/icons-material/Lock';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import CheckIcon from '@mui/icons-material/Check';
 
-const Home = () => {
+const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}: {cart: ProductIT[], setCart: any, numberOfItems: number, setNumberOfItems: any, total: number, setTotal: any}) => {
   const [data, setData] = useState<any>([]);
   const [products, setProducts] = useState<ProductIT[]>([]);
   const [display, setDisplay] = useState<ProductIT[]>([]);
-  const [cart, setCart] = useState<ProductIT[]>([]);
-  const [numberOfItems, setNumberOfItems] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [counter, setCounter] = useState<number>(0);
   const [paymentOption, setPaymentOption] = useState<string>('');
