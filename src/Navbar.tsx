@@ -2,13 +2,18 @@ import './Navbar.scss';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
-import { useEffect } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 
 const Navbar = ({numberOfItems}: {numberOfItems: number}) => {
+    const [searchInput, setSearchInput] = useState<string>('');
 
     useEffect(()=>{
-      let path = window.location.pathname.replace(/\\|\//g,'');
-      document.getElementById(path + "link")!.classList.add('active');
+      let path = window.location.pathname.replace(/\\|\//g,'')
+      if((window.location.pathname).includes('search') === false){
+        document.getElementById(path + "link")!.classList.add('active');
+      }
+        
+
     }, [])
 
     useEffect(()=>{
@@ -31,8 +36,8 @@ const Navbar = ({numberOfItems}: {numberOfItems: number}) => {
         <li><a id="aboutlink" href="/about" className="links">About</a></li>
     </ul>
     <div className="right">
-    <input placeholder='Search products' />
-    <SearchIcon className="searchIcon" />
+    <input onChange={(e: ChangeEvent<HTMLInputElement>)=>{ setSearchInput(e.target.value) }} placeholder='Search products' />
+    <a href={"/search/" + searchInput}><SearchIcon className="searchIcon" /></a>
     <AccountCircleIcon className="profile-icon" />
     <div id="numberOfItems" className="numberOfItems">
     {numberOfItems}
