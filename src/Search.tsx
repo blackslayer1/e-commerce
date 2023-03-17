@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import './Search.scss';
 import ProductIT from './Interface';
 import Product from './Product';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { AnyAaaaRecord } from 'dns';
 
 const Search = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}: {cart: ProductIT[], setCart: any, numberOfItems: number, setNumberOfItems: any, total: number, setTotal: any}) => {
   const [ret, setRet] = useState<string>((window.location.pathname).replace('/search/',''));
   const [data, setData] = useState<any>([]);
   const [products, setProducts] = useState<ProductIT[]>([]);
   const [results, setResults] = useState<ProductIT[]>([]);
+  const [sortValue, setSortValue] = useState<string>('');
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -67,6 +69,17 @@ const Search = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal
   }
 
   useEffect(()=>{
+    if(sortValue === '1'){
+      document.getElementById('activate2')!.click();
+
+    } else if (sortValue === '2'){
+      results.sort((a: any, b: any) => a.rating.rate - b.rating.rate);
+    } else if (sortValue === '3'){
+      results.sort((a: any, b: any) => a.title.localeCompare(b.title))
+    }
+  }, [sortValue])
+
+  useEffect(()=>{
     setTimeout(()=>{
       document.getElementById('activate2')!.click();
     }, 500)
@@ -76,6 +89,14 @@ const Search = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal
     <div className="search-page">
     <Navbar numberOfItems={0} />
     <h4>Showing results for {ret}</h4>
+    <div className="sort-container">
+    <label>Sort by</label>
+    <select onChange={(e: ChangeEvent<HTMLSelectElement>)=>{setSortValue(e.target.value)}}>
+      <option value="1">Most Relevant</option>
+      <option value="2">Rating</option>
+      <option value="3">Alphabet (A-Z)</option>
+    </select>
+    </div>
     <button style={{display: "none"}} id='activate2' onClick={activate2}>activate</button>
     <div className="result-container">
     {results.map((obj)=>{

@@ -8,4 +8,23 @@
         display: flex;
         flex-wrap: wrap;
     }
+    .modal-content{
+        bottom: 150px;
+    }
+    .sort-container{
+        float: right;
+        position: relative;
+        right: 30px;
+        bottom: 35px;
+    }
+    select{
+        padding: 5px;
+        width: 120px;
+        outline: none;
+        margin-left: 5px;
+    }
+    label{
+        color: gray;
+        font-size: 14px;
+    }
 }
