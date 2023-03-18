@@ -27,4 +27,16 @@
         color: gray;
         font-size: 14px;
     }
+    .modal-content{
+        height: 70vh;
+        .buttons{
+            position: relative;
+            bottom: 170px;
+        }
+        .ratings{
+            position: relative;
+            bottom: 150px;
+            right: 35px;
+        }
+    }
 }

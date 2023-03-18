@@ -21,6 +21,7 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
   const [checkMarkChangeHandler, setCheckMarkChangeHandler] = useState<number>(0);
   const [paypalEmail, setPaypalEmail] = useState<string>('');
   const [cardInput, setCardInput] = useState<string>('');
+  const [hover, setHover] = useState<boolean>(false);
 
   async function fetchData(){
     await fetch("https://fakestoreapi.com/products")
@@ -317,15 +318,27 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
           <div style={{width: "55%"}}>
           <p className="description" style={{fontWeight: "400"}}>{obj.description}</p>
             <div style={{position: "relative", float: "left"}}>
-              <h4>Price: <span>${obj.price}</span></h4>
+              <h4 style={{position: "relative", right: "40px"}}>Price: <span>${obj.price}</span></h4>
               <h4>Category: <span>{obj.category}</span></h4>
-              <ul className="ratings">
+              <ul className="ratings" id="ratings" style={{position: "relative", right: "40px"}} onMouseOver={()=>{setHover(true)}}>
             <li>{obj.rating.rate >= 1 ? <StarIcon /> : <StarBorderIcon />}</li>
             <li>{obj.rating.rate >= 2 ? <StarIcon /> : <StarBorderIcon />}</li>
             <li>{obj.rating.rate >= 3 ? <StarIcon /> : <StarBorderIcon />}</li>
             <li>{obj.rating.rate >= 4 ? <StarIcon /> : <StarBorderIcon />}</li>
             <li>{obj.rating.rate === 5 ? <StarIcon /> : <StarBorderIcon />}</li>
             </ul>
+            {
+              hover &&             
+              <ul className="hover" id="hover" onMouseLeave={()=>{setHover(false)}}>
+              <li><StarIcon /></li>
+              <li><StarIcon /></li>
+              <li><StarIcon /></li>
+              <li><StarIcon /></li>
+              <li><StarIcon /></li>
+            </ul>
+            }
+            <span style={{color: "rgb(255, 217, 0)", position: "relative", bottom: "43px", left: '110px'}}>Total ratings: {obj.rating.total}</span>
+            <span style={{color: "green", position: "absolute", width: "300px", left: '-10px', bottom: "80px", visibility: "hidden"}}>Thank you for your feedback</span>
             <div className="buttons">
             <button onClick={()=>{addToCart(obj.id, obj)}} id={"addToCart" + obj.id} className="addToCart">Add To Cart</button>
             <button className="buy">Checkout Now</button>
