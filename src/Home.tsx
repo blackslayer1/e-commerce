@@ -352,7 +352,7 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
           
         })}
       </div>
-      <button style={{position: "absolute", top: "0", left: "0", visibility: "visible"}} id="activate" onClick={activateDisplay}>activate</button>
+      <button style={{position: "absolute", top: "0", left: "0", visibility: "hidden"}} id="activate" onClick={activateDisplay}>activate</button>
       <div id="cartModal" className="modal">
       <div className="modal-content">
         <span onClick={()=>{document.getElementById('cartModal')!.style.display="none"}} className="close">&times;</span>
