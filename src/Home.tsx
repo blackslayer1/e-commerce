@@ -228,7 +228,7 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
         lockIcon.style.visibility="visible";
         spinner.style.display="none";
         reset();
-      }, 2000)
+      }, 3000)
     }
 
     useEffect(()=>{
@@ -255,7 +255,7 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
       text.style.display="none";
     }
 
- /* useEffect(() => {
+  useEffect(() => {
     const container = document.getElementById('display-container')!;
     var scrollCounter = 0;
     var scrollRight = true;
@@ -283,13 +283,13 @@ const Home = ({cart, setCart, numberOfItems, setNumberOfItems, total, setTotal}:
     }, 3000);
 
     return () => clearInterval(intervalID);
-}, []); */
+}, []);
 
- /* useEffect(()=>{
+  useEffect(()=>{
     setTimeout(()=>{
       document.getElementById('activate')!.click()
     }, 1000)
-  }, []) */
+  }, []) 
 
   return (
     <div className="home">
